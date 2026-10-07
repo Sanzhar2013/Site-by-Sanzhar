@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+
+<html lang="kk">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Шалкиіз жырау — Quiz</title>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family: Arial, sans-serif;
+
+    background:
+        linear-gradient(
+            rgba(0,0,0,.75),
+            rgba(0,0,0,.88)
+        ),
+        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2000&q=80");
+
+    background-size: cover;
+
+    background-position: center;
+
+    color: white;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+}
+
+
+.container {
+
+    width: 100%;
+
+    max-width: 800px;
+
+    background: rgba(15,15,15,.96);
+
+    border-radius: 25px;
+
+    padding: 35px;
+
+    box-shadow:
+        0 0 40px
+        rgba(0,0,0,.8);
+
+}
+
+
+h1 {
+
+    text-align: center;
+
+    color: #f5c542;
+
+    margin-top: 0;
+
+}
+
+
+.subtitle {
+
+    text-align: center;
+
+    color: #ccc;
+
+    margin-bottom: 30px;
+
+    line-height: 1.5;
+
+}
+
+
+input,
+select {
+
+    width: 100%;
+
+    padding: 15px;
+
+    margin-top: 10px;
+
+    border-radius: 10px;
+
+    border: 1px solid #555;
+
+    background: #222;
+
+    color: white;
+
+    font-size: 16px;
+
+}
+
+
+.start {
+
+    width: 100%;
+
+    padding: 16px;
+
+    margin-top: 20px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #f5c542;
+
+    color: #111;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+.start:hover {
+
+    background: #ffd966;
+
+}
+
+
+#quiz {
+
+    display: none;
+
+}
+
+
+.top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    font-size: 18px;
+
+    margin-bottom: 20px;
+
+}
+
+
+.timer {
+
+    color: #ff7777;
+
+    font-size: 22px;
+
+    font-weight: bold;
+
+}
+
+
+.progress {
+
+    width: 100%;
+
+    height: 8px;
+
+    background: #444;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    margin-bottom: 25px;
+
+}
+
+
+.progress-bar {
+
+    height: 100%;
+
+    width: 0%;
+
+    background: #f5c542;
+
+    transition: .3s;
+
+}
+
+
+.question {
+
+    font-size: 23px;
+
+    line-height: 1.5;
+
+    margin-bottom: 25px;
+
+}
+
+
+.answer {
+
+    width: 100%;
+
+    padding: 16px;
+
+    margin: 7px 0;
+
+    border: 2px solid #555;
+
+    border-radius: 12px;
+
+    background: #292929;
+
+    color: white;
+
+    font-size: 16px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.answer:hover {
+
+    background: #3a3a3a;
+
+    transform: translateX(3px);
+
+}
+
+
+.answer.selected {
+
+    background: #594b18;
+
+    border-color: #f5c542;
+
+}
+
+
+.next {
+
+    width: 100%;
+
+    padding: 15px;
+
+    margin-top: 15px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #f5c542;
+
+    color: #111;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    display: none;
+
+}
+
+
+#result {
+
+    display: none;
+
+    text-align: center;
+
+}
+
+
+.final-score {
+
+    font-size: 55px;
+
+    color: #f5c542;
+
+    margin: 25px 0;
+
+}
+
+
+.message {
+
+    color: #ccc;
+
+    line-height: 1.7;
+
+}
+
+
+.error {
+
+    color: #ff6666;
+
+}
+
+
+.success {
+
+    color: #4ade80;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<!-- ================================================= -->
+<!-- БАСТАПҚЫ БЕТ -->
+<!-- ================================================= -->
+
+<div id="login">
+
+    <h1>🏹 Шалкиіз жырау</h1>
+
+    <p class="subtitle">
+        Қазақ әдебиеті бойынша онлайн викторина
+        <br>
+        15 сұрақтың ішінен кездейсоқ 10 сұрақ
+        <br>
+        ⏱️ Уақыт: 7 минут
+    </p>
+
+
+    <input
+        type="text"
+        id="name"
+        placeholder="Аты-жөнің"
+        autocomplete="off"
+    >
+
+
+    <select id="studentClass">
+
+        <option value="">
+            Сыныбыңды таңда
+        </option>
+
+        <option value="8 А">
+            8 А
+        </option>
+
+        <option value="8 Б">
+            8 Б
+        </option>
+
+        <option value="8 В">
+            8 В
+        </option>
+
+    </select>
+
+
+    <button
+        class="start"
+        onclick="startQuiz()"
+    >
+        Викторинаны бастау
+    </button>
+
+
+    <p
+        id="loginMessage"
+        class="message"
+    ></p>
+
+</div>
+
+
+
+<!-- ================================================= -->
+<!-- ВИКТОРИНА -->
+<!-- ================================================= -->
+
+<div id="quiz">
+
+
+    <div class="top">
+
+        <span id="questionNumber">
+            1 / 10
+        </span>
+
+
+        <span class="timer">
+
+            ⏱️
+
+            <span id="timer">
+                07:00
+            </span>
+
+        </span>
+
+    </div>
+
+
+    <div class="progress">
+
+        <div
+            class="progress-bar"
+            id="progress"
+        ></div>
+
+    </div>
+
+
+    <div
+        class="question"
+        id="question"
+    ></div>
+
+
+    <div id="answers"></div>
+
+
+    <button
+        class="next"
+        id="next"
+        onclick="nextQuestion()"
+    >
+        Келесі сұрақ →
+    </button>
+
+
+</div>
+
+
+
+<!-- ================================================= -->
+<!-- НӘТИЖЕ -->
+<!-- ================================================= -->
+
+<div id="result">
+
+    <h1>
+        🏆 Тест аяқталды
+    </h1>
+
+
+    <div
+        class="final-score"
+        id="finalScore"
+    >
+        0 / 100
+    </div>
+
+
+    <p
+        class="message"
+        id="resultMessage"
+    ></p>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+
+// ====================================================
+// АЙНЫМАЛЫЛАР
+// ====================================================
+
+let questions = [];
+
+let currentQuestion = 0;
+
+let selectedAnswer = null;
+
+let userAnswers = [];
+
+let timeLeft = 7 * 60;
+
+let timerInterval = null;
+
+let studentName = "";
+
+let studentClass = "";
+
+let submitted = false;
+
+
+// ====================================================
+// ТЕСТІ БАСТАУ
+// ====================================================
+
+async function startQuiz() {
+
+
+    studentName =
+        document
+        .getElementById("name")
+        .value
+        .trim();
+
+
+    studentClass =
+        document
+        .getElementById("studentClass")
+        .value;
+
+
+    const message =
+        document
+        .getElementById("loginMessage");
+
+
+    // АТЫ ТЕКСЕРУ
+
+    if (!studentName) {
+
+        message.innerHTML =
+            "<span class='error'>" +
+            "Аты-жөніңді енгіз." +
+            "</span>";
+
+        return;
+    }
+
+
+    // СЫНЫП ТЕКСЕРУ
+
+    if (!studentClass) {
+
+        message.innerHTML =
+            "<span class='error'>" +
+            "Сыныбыңды таңда." +
+            "</span>";
+
+        return;
+    }
+
+
+    message.textContent =
+        "Сұрақтар дайындалуда...";
+
+
+    try {
+
+        // Серверден 10 кездейсоқ сұрақ алу
+
+        const response =
+            await fetch("/questions");
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Сервер қатесі"
+            );
+
+        }
+
+
+        questions =
+            await response.json();
+
+
+        currentQuestion = 0;
+
+        selectedAnswer = null;
+
+        userAnswers = [];
+
+        timeLeft = 7 * 60;
+
+        submitted = false;
+
+
+        // Бастапқы бет жасырылады
+
+        document
+        .getElementById("login")
+        .style.display =
+            "none";
+
+
+        // Тест ашылады
+
+        document
+        .getElementById("quiz")
+        .style.display =
+            "block";
+
+
+        // Таймер
+
+        startTimer();
+
+
+        // Бірінші сұрақ
+
+        showQuestion();
+
+
+    }
+
+    catch(error) {
+
+        message.innerHTML =
+            "<span class='error'>" +
+            "Сервермен байланыс жоқ." +
+            "</span>";
+
+        console.error(error);
+
+    }
+
+}
+
+
+// ====================================================
+// СҰРАҚТЫ КӨРСЕТУ
+// ====================================================
+
+function showQuestion() {
+
+
+    const q =
+        questions[currentQuestion];
+
+
+    // Нөмір
+
+    document
+    .getElementById("questionNumber")
+    .textContent =
+        `${currentQuestion + 1} / ${questions.length}`;
+
+
+    // Сұрақ
+
+    document
+    .getElementById("question")
+    .textContent =
+        q.question;
+
+
+    // Progress
+
+    const progress =
+        (currentQuestion /
+        questions.length) *
+        100;
+
+
+    document
+    .getElementById("progress")
+    .style.width =
+        progress + "%";
+
+
+    // Жауаптар
+
+    const answersContainer =
+        document
+        .getElementById("answers");
+
+
+    answersContainer.innerHTML = "";
+
+
+    selectedAnswer = null;
+
+
+    q.answers.forEach(
+        (answer) => {
+
+
+        const button =
+            document
+            .createElement("button");
+
+
+        button.className =
+            "answer";
+
+
+        button.textContent =
+            answer.text;
+
+
+        button.onclick =
+            function() {
+
+                selectAnswer(
+                    button,
+                    answer.id
+                );
+
+            };
+
+
+        answersContainer
+        .appendChild(button);
+
+    });
+
+
+    // Келесі батырмасын жасыру
+
+    document
+    .getElementById("next")
+    .style.display =
+        "none";
+
+}
+
+
+// ====================================================
+// ЖАУАПТЫ ТАҢДАУ
+// ====================================================
+
+function selectAnswer(
+    button,
+    answerId
+) {
+
+
+    const buttons =
+        document
+        .querySelectorAll(
+            ".answer"
+        );
+
+
+    buttons.forEach(
+        function(btn) {
+
+            btn.classList.remove(
+                "selected"
+            );
+
+        }
+    );
+
+
+    button.classList.add(
+        "selected"
+    );
+
+
+    selectedAnswer =
+        answerId;
+
+
+    document
+    .getElementById("next")
+    .style.display =
+        "block";
+
+}
+
+
+// ====================================================
+// КЕЛЕСІ СҰРАҚ
+// ====================================================
+
+function nextQuestion() {
+
+
+    if (
+        selectedAnswer === null
+    ) {
+
+        return;
+
+    }
+
+
+    // Жауапты сақтау
+
+    userAnswers.push({
+
+        questionId:
+            questions[
+                currentQuestion
+            ].id,
+
+        answerId:
+            selectedAnswer
+
+    });
+
+
+    currentQuestion++;
+
+
+    // Барлық 10 сұрақ аяқталды
+
+    if (
+        currentQuestion >=
+        questions.length
+    ) {
+
+        submitQuiz();
+
+        return;
+
+    }
+
+
+    showQuestion();
+
+}
+
+
+// ====================================================
+// ТАЙМЕРДІ БАСТАУ
+// ====================================================
+
+function startTimer() {
+
+
+    // Бұрынғы таймерді тоқтату
+
+    clearInterval(
+        timerInterval
+    );
+
+
+    updateTimer();
+
+
+    timerInterval =
+        setInterval(
+            function() {
+
+
+            timeLeft--;
+
+
+            updateTimer();
+
+
+            // 0 секунд
+
+            if (
+                timeLeft <= 0
+            ) {
+
+                clearInterval(
+                    timerInterval
+                );
+
+
+                autoSubmit();
+
+            }
+
+
+        },
+        1000
+    );
+
+}
+
+
+// ====================================================
+// ТАЙМЕРДІ КӨРСЕТУ
+// ====================================================
+
+function updateTimer() {
+
+
+    const minutes =
+        Math.floor(
+            timeLeft / 60
+        );
+
+
+    const seconds =
+        timeLeft % 60;
+
+
+    document
+    .getElementById("timer")
+    .textContent =
+
+        String(minutes)
+        .padStart(2, "0")
+
+        +
+
+        ":"
+
+        +
+
+        String(seconds)
+        .padStart(2, "0");
+
+
+    // Соңғы 60 секунд
+
+    if (
+        timeLeft <= 60
+    ) {
+
+        document
+        .getElementById("timer")
+        .style.color =
+            "#ff2222";
+
+    }
+
+}
+
+
+// ====================================================
+// УАҚЫТ БІТКЕНДЕ
+// ====================================================
+
+function autoSubmit() {
+
+
+    alert(
+        "⏰ 7 минут аяқталды! Нәтиже жіберіледі."
+    );
+
+
+    submitQuiz();
+
+}
+
+
+// ====================================================
+// НӘТИЖЕНІ СЕРВЕРГЕ ЖІБЕРУ
+// ====================================================
+
+async function submitQuiz() {
+
+
+    // Екінші рет жібермеу
+
+    if (submitted) {
+
+        return;
+
+    }
+
+
+    submitted = true;
+
+
+    clearInterval(
+        timerInterval
+    );
+
+
+    // Егер соңғы сұрақта жауап таңдалған болса,
+    // оны да сақтау
+
+    if (
+        selectedAnswer !== null
+        &&
+        currentQuestion <
+        questions.length
+    ) {
+
+        userAnswers.push({
+
+            questionId:
+                questions[
+                    currentQuestion
+                ].id,
+
+            answerId:
+                selectedAnswer
+
+        });
+
+    }
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/submit",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            name:
+                                studentName,
+
+                            studentClass:
+                                studentClass,
+
+                            answers:
+                                userAnswers
+
+                        })
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Нәтижені жіберу қатесі"
+            );
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            alert(
+                result.message
+            );
+
+            submitted = false;
+
+            return;
+
+        }
+
+
+        // Тестті жасыру
+
+        document
+        .getElementById("quiz")
+        .style.display =
+            "none";
+
+
+        // Нәтижені көрсету
+
+        document
+        .getElementById("result")
+        .style.display =
+            "block";
+
+
+        document
+        .getElementById("finalScore")
+        .textContent =
+            result.score +
+            " / 100";
+
+
+        document
+        .getElementById("resultMessage")
+        .innerHTML =
+
+            "<span class='success'>" +
+
+            "Нәтиже сақталды!<br><br>" +
+
+            "</span>" +
+
+            "Оқушы: <b>" +
+            result.name +
+            "</b><br>" +
+
+            "Сынып: <b>" +
+            result.studentClass +
+            "</b><br><br>" +
+
+            "Дұрыс жауап: <b>" +
+            result.correct +
+            "/" +
+            result.total +
+            "</b>";
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        alert(
+            "Нәтижені серверге жіберу мүмкін болмады."
+        );
+
+        submitted = false;
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>
